@@ -22,13 +22,19 @@ def update_bank(amount):
     with open("current_bank.dat", "w") as f:
         f.write(amount)
 
-def write_position(trade):
-    with open("transactions.csv", "w+") as f:
-        f.write("%s, %s,%d,%s,%s" % (datetime.now(),   
+def write_position(trade, amount):
+    print "Writing transaction..."
+    with open("transactions.csv", "a+") as f:
+        f.write("%s; %s; %s; %s; %s\n" % (datetime.now(),   
                                      trade['ticker'],  
                                      trade['price'],   
                                      trade['position'],
                                      trade['reason']))
+    print "Done"
+
+    print "Updating bank..."
+    update_bank(str(float(read_bank())-amount))
+    print "Done"
 
 def calculate_position(trade):
     bank = float(read_bank())
@@ -75,10 +81,11 @@ def start_session():
             display(proposed_position)
 
         elif selection == "save":
-            write_position(trade)
+            proposed_position = calculate_position(trade)
+            write_position(trade, proposed_position['amount'])
 
         elif selection == "update":
-            trade.price = next_arg("price?")
+            trade['price'] = next_arg("price?")
 
             proposed_position = calculate_position(trade)
             display(proposed_position)
