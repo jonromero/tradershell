@@ -1,2 +1,3 @@
 20 January 2014 01:30:03 -> I need to add in calculate_position an if for buy/sell
 20 January 2014 01:30:26 -> and then check if everything works - and add gdocs export
+20 January 2014 02:08:16 -> fix the names stop and limit

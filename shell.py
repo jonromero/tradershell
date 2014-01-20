@@ -33,11 +33,18 @@ def write_position(trade):
 def calculate_position(trade):
     bank = float(read_bank())
     strategy = read_config()
-
+    price = float(trade['price'])
+    
     amount = bank * strategy['risk']
+    limit = price * strategy['limit']
+    stop = price * strategy['stop']
+
+    limit += price if trade['position'] == "BUY" else -price
+    stop -= price if trade['position'] == "BUY" else -price
+    
     return {'amount': amount,
-            'limit': amount * strategy['limit'],
-            'stop': amount * strategy['stop']}
+            'limit': limit,
+            'stop': stop}
 
 def display(trade):
     print trade
@@ -61,7 +68,7 @@ def start_session():
             trade = {}
             trade['ticker'] = next_arg("ticker?")
             trade['price'] = next_arg("price?")
-            trade['position'] = next_arg("position? (buy/sell)")
+            trade['position'] = next_arg("position? (buy/sell)").upper()
             trade['reason'] = next_arg("reason?")
 
             proposed_position = calculate_position(trade)
