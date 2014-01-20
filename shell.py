@@ -42,15 +42,15 @@ def calculate_position(trade):
     price = float(trade['price'])
     
     amount = bank * strategy['risk']
-    stop_win = price * strategy['stop_win']
+    take_profit = price * strategy['take_profit']
     stop_loss = price * strategy['stop_loss']
 
-    stop_win += price if trade['position'] == "BUY" else -price
-    stop_loss -= price if trade['position'] == "BUY" else -price
+    take_profit += price if trade['position'] == "BUY" else -price
+    stop_loss += -price if trade['position'] == "BUY" else price
     
     return {'amount': amount,
-            'stop_win': stop_win,
-            'stop_loss': stop_loss}
+            'take_profit': abs(take_profit),
+            'stop_loss': abs(stop_loss)}
 
 def display(trade):
     print trade
