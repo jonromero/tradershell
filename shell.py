@@ -42,15 +42,16 @@ def calculate_position(trade):
     price = float(trade['price'])
     
     amount = bank * strategy['risk']
-    take_profit = price * strategy['take_profit']
-    stop_loss = price * strategy['stop_loss']
+    #take_profit = price * strategy['reward']
+    #stop_loss = price * strategy['risk']
 
-    take_profit += price if trade['position'] == "BUY" else -price
-    stop_loss += -price if trade['position'] == "BUY" else price
+    #take_profit += price if trade['position'] == "BUY" else -price
+    #stop_loss += -price if trade['position'] == "BUY" else price
+
+    max_pips_in_danger = (trade['price']-trade['sell']) if trade['position'] in "buy" else (trade['price']-trade['buy'])
     
     return {'amount': amount,
-            'take_profit': abs(take_profit),
-            'stop_loss': abs(stop_loss)}
+            'units': amount/max_pips_in_danger*1000}
 
 def display(trade):
     print trade
@@ -75,7 +76,8 @@ def start_session():
             trade['ticker'] = next_arg("ticker?")
             trade['price'] = next_arg("price?")
             trade['position'] = next_arg("position? (buy/sell)").upper()
-            trade['reason'] = next_arg("reason?")
+            trade['bid'] = next_arg("bid?")
+            trade['ask'] = next_arg("ask?")
 
             proposed_position = calculate_position(trade)
             display(proposed_position)
